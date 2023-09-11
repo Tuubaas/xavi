@@ -3,7 +3,15 @@ import { useState } from "react";
 
 import { useKeyPress } from "./hooks";
 
-const Card = ({ value, question }: { value: number; question: string }) => {
+const Card = ({
+  value,
+  question,
+  callback,
+}: {
+  value: number;
+  question: string;
+  callback: () => void;
+}) => {
   const [show, setShow] = useState<boolean>(false);
   const [haveBeenChosen, setHaveBeenChosen] = useState<boolean>(false);
 
@@ -17,6 +25,7 @@ const Card = ({ value, question }: { value: number; question: string }) => {
             onClick={() => {
               setShow((curr) => !curr);
               setHaveBeenChosen(true);
+              callback();
             }}
           >
             <span>{value}</span>
