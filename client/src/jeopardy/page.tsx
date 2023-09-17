@@ -16,6 +16,17 @@ import Card from "./Card";
 // };
 
 const JeopardyPage = () => {
+  const ws = new WebSocket("ws://localhost:3000");
+
+  ws.onopen = () => {
+    console.log("connected");
+    ws.send("Hello");
+  };
+
+  ws.onmessage = (e) => {
+    console.log(e.data);
+  };
+
   const jeopardyData = [1, 2, 3, 4, 5].map((i) => ({
     title: `Category ${i}`,
     questions: [1, 2, 3, 4, 5].map((j) => ({
@@ -26,7 +37,7 @@ const JeopardyPage = () => {
   }));
 
   const handleClick = (i: number) => {
-    console.log("Clicked", i);
+    ws.send(`Question ${i}`);
   };
   // const [questions, setQuestions] = useState<JeopardyData>([{title:"Category 1", questions:[{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"}]}, {title:"Category 1", questions:[{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"}]}, {title:"Category 1", questions:[{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"}]}, {title:"Category 1", questions:[{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"}]}, {title:"Category 1", questions:[{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"},{question:"Question 1", answer: "Answer 1", value: "1"}]}]);
   return (
