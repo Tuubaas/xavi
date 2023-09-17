@@ -1,4 +1,3 @@
-"use client";
 import { io } from "socket.io-client";
 import Card from "./Card";
 import { useEffect, useState } from "react";
