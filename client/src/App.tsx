@@ -4,10 +4,10 @@ import {
   Router,
   Route,
   RootRoute,
-  Link,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import JeopardyPage from "./jeopardy/page";
+import Index from "./pages/Index";
 
 // const TanStackRouterDevtools =
 //   import.meta.env.NODE_ENV === "production"
@@ -30,19 +30,12 @@ const rootRoute = new RootRoute({
 const indexRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: function Index() {
-    return (
-      <>
-        <h1>Home</h1>
-        <Link to="/jeopardy">Jeopardy</Link>
-      </>
-    );
-  },
+  component: Index,
 });
 
 const jeopardyRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/jeopardy",
+  path: "/jeopardy/$id",
   component: JeopardyPage,
 });
 
