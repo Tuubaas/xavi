@@ -4,10 +4,10 @@ import {
   Router,
   Route,
   RootRoute,
-} from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import JeopardyPage from "./jeopardy/page";
-import Index from "./pages/Index";
+} from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import JeopardyPage from './jeopardy/page';
+import Index from './pages/Index';
 
 // const TanStackRouterDevtools =
 //   import.meta.env.NODE_ENV === "production"
@@ -29,13 +29,13 @@ const rootRoute = new RootRoute({
 
 const indexRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/",
+  path: '/',
   component: Index,
 });
 
 const jeopardyRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/jeopardy/$id",
+  path: '/jeopardy/$id',
   component: JeopardyPage,
 });
 
@@ -43,7 +43,7 @@ const routeTree = rootRoute.addChildren([indexRoute, jeopardyRoute]);
 
 const router = new Router({ routeTree });
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
   }
