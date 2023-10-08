@@ -29,6 +29,10 @@ const server = Bun.serve<Room>({
         );
       }
       if (url.pathname.split("/")[2] === "join") {
+        console.log("JOIN");
+        console.log(url.pathname.split("/")[3]);
+        console.log(rooms);
+
         const roomCode = url.pathname.split("/")[3];
         if (!roomCode) {
           throw new Error(
@@ -39,9 +43,16 @@ const server = Bun.serve<Room>({
             JSON.stringify({ success: false, error: "Room does not exist" })
           );
         }
-        return new Response(JSON.stringify({ success: true, roomCode }), {
-          status: 200,
-        });
+        return Response.json(
+          { success: true, roomCode },
+          {
+            status: 200,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            },
+          }
+        );
       }
     }
     // upgrade the request to a websocket connection

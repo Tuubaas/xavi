@@ -1,21 +1,34 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import useCreate from '../hooks/useCreate';
-import useJoin from '../hooks/useJoin';
+import { useQuery } from 'react-query';
+import { fetchRoom } from '../hooks/useJoin';
 
 const Index = () => {
   const navigate = useNavigate({});
 
-  const [gameId, setGameId] = useState('');
   const [showInput, setShowInput] = useState(false);
+  const [roomCode, setRoomCode] = useState('');
 
   const { mutateAsync, isLoading: isLoadingCreate } = useCreate();
-  const {
-    data: joinData,
-    isLoading: isLoadingJoin,
-    isError: isJoinError,
-    isSuccess: isJoinSuccess,
-  } = useJoin(gameId);
+  const { data, isLoading } = useQuery(
+    ['join', roomCode],
+    () => fetchRoom(roomCode),
+    { refetchOnWindowFocus: false, enabled: Boolean(roomCode) },
+  );
+
+  // useEffect(() => {
+  //   console.log('Refetching');
+
+  //   refetch();
+  // }, [roomCode]);
+
+  // useEffect(() => {
+  //   console.log('Data: ', data);
+  //   if (data) {
+  //     navigate({ to: `/jeopardy/$id`, params: { id: roomCode } });
+  //   }
+  // }, [data, isRefetching, roomCode, navigate]);
 
   const createNewGame = async () => {
     const res = await mutateAsync();
@@ -24,36 +37,32 @@ const Index = () => {
       navigate({ to: `/jeopardy/$id`, params: { id: res.roomCode } });
     }
   };
-  console.log(joinData, isLoadingJoin, isJoinError, isJoinSuccess);
 
-  if (isLoadingJoin) {
-    return <p>Loading...</p>;
-  }
-  if (isJoinSuccess) {
-    console.log('Room joined: ', joinData.roomCode);
-    navigate({ to: `/jeopardy/$id`, params: { id: joinData.roomCode } });
-  }
-  if (isJoinError) {
-    // Add error handling
-    return;
-  }
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const roomCode = formData.get('roomCode');
-    if (typeof roomCode !== 'string') {
+    const roomCodeInput = formData.get('roomCode');
+
+    if (typeof roomCodeInput !== 'string') {
       // Add error handling
       return;
     }
-    setGameId(roomCode);
+    console.log('SET');
+
+    setRoomCode(roomCodeInput);
+  }
+
+  if (isLoading) return <p>Loading...</p>;
+
+  if (data) {
+    navigate({ to: `/jeopardy/$id`, params: { id: roomCode } });
   }
 
   return (
     <>
       <h1>Home</h1>
       <div className="flex flex-col justify-center items-center gap-4">
-        {isLoadingCreate || (isLoadingJoin && <p>Loading...</p>)}
+        {isLoadingCreate && <p>Loading...</p>}
         <button
           onClick={createNewGame}
           className="p-4 border border-white rounded-xl bg-slate-600"
